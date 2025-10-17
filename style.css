@@ -1,0 +1,80 @@
+body {
+  background: #fffaf3;
+  color: #333;
+  font-family: "Hiragino Kaku Gothic ProN", "メイリオ", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 700px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  text-align: center;
+}
+
+h1 {
+  color: #ff7043;
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.2em;
+}
+
+#buttons button {
+  font-size: 1.2em;
+  padding: 12px 30px;
+  margin: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#yesBtn {
+  background-color: #4caf50;
+  color: white;
+}
+
+#noBtn {
+  background-color: #f44336;
+  color: white;
+}
+
+#buttons button:hover {
+  opacity: 0.8;
+}
+
+#result {
+  text-align: left;
+  margin-top: 20px;
+  font-size: 1em;
+}
+
+.recipe-section {
+  margin-top: 10px;
+}
+
+.recipe-section h3 {
+  color: #ff7043;
+}
+
+#resetBtn {
+  background-color: #2196f3;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 1em;
+}
+
+#resetBtn:hover {
+  opacity: 0.8;
+}
