@@ -2,180 +2,27 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>料理アキネーター 🍛</title>
-  <style>
-    body {
-      font-family: 'Helvetica Neue', sans-serif;
-      background: #fff8f0;
-      color: #333;
-      padding: 30px;
-      max-width: 700px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
-      color: #c1440e;
-    }
-    #question {
-      font-size: 1.3em;
-      margin: 20px 0;
-    }
-    button {
-      background-color: #f28c28;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 1em;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-    button:hover {
-      background-color: #d36c0f;
-    }
-    #result {
-      background-color: #fff3e0;
-      border: 1px solid #f28c28;
-      padding: 15px;
-      margin-top: 30px;
-      border-radius: 8px;
-    }
-    ul { padding-left: 20px; }
-    .hidden { display: none; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>料理アキネーター 🍳</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>料理アキネーター 🍴</h1>
-  <p id="question"></p>
-  <div>
-    <button onclick="answer('yes')">はい</button>
-    <button onclick="answer('no')">いいえ</button>
+  <div class="container">
+    <h1>🍽️ 料理アキネーター</h1>
+    <p id="question">質問を読み込み中...</p>
+
+    <div id="buttons">
+      <button id="yesBtn" onclick="handleAnswer(true)">はい</button>
+      <button id="noBtn" onclick="handleAnswer(false)">いいえ</button>
+    </div>
+
+    <div id="result" style="display:none;"></div>
+
+    <div id="resetArea" style="display:none;">
+      <button id="resetBtn" onclick="resetQuiz()">もう一度遊ぶ</button>
+    </div>
   </div>
-  <div id="result" class="hidden"></div>
 
-  <script>
-    const recipes = [
-      "カレーライス", "ハンバーグ", "焼き魚", "味噌汁", "親子丼", "うな丼", "寿司",
-      "ラーメン", "天ぷら", "お好み焼き", "たこ焼き", "餃子", "麻婆豆腐",
-      "チャーハン", "ビーフシチュー", "ミートソースパスタ", "カルボナーラ", "ピザ",
-      "グラタン", "ドリア", "シーザーサラダ", "冷やし中華", "サンドイッチ", "オムライス",
-      "生姜焼き", "唐揚げ", "酢豚", "回鍋肉", "天津飯", "フォー", "ナシゴレン",
-      "バターチキンカレー", "グリーンカレー", "カオマンガイ", "ビビンバ", "トッポギ",
-      "サムギョプサル", "ガパオライス", "ローストビーフ", "エビフライ",
-      "ホットドッグ", "ハヤシライス", "スンドゥブ", "もつ鍋", "鍋焼きうどん",
-      "かつ丼", "牛丼", "天丼", "焼きそば", "煮物"
-    ];
-
-    const traits = [
-      { key: 'hot', question: '温かい料理ですか？' },
-      { key: 'rice', question: 'ご飯が使われていますか？' },
-      { key: 'noodle', question: '麺類ですか？' },
-      { key: 'meat', question: '肉が使われていますか？' },
-      { key: 'fish', question: '魚が使われていますか？' },
-      { key: 'deepfried', question: '揚げ物ですか？' },
-      { key: 'japanese', question: '和食ですか？' },
-      { key: 'soup', question: '汁物ですか？' },
-      { key: 'vegetarian', question: '野菜が中心ですか？' },
-      { key: 'spicy', question: '辛い料理ですか？' }
-    ];
-
-    const recipeTraits = {
-      "カレーライス":     ['hot', 'rice', 'meat', 'spicy', 'japanese'],
-      "ハンバーグ":       ['hot', 'meat', 'japanese'],
-      "焼き魚":           ['hot', 'fish', 'japanese'],
-      "味噌汁":           ['hot', 'soup', 'japanese'],
-      "親子丼":           ['hot', 'rice', 'meat', 'japanese'],
-      "うな丼":           ['hot', 'rice', 'fish', 'japanese'],
-      "寿司":             ['fish', 'rice', 'japanese'],
-      "ラーメン":         ['hot', 'noodle', 'soup'],
-      "天ぷら":           ['deepfried', 'fish', 'vegetarian', 'japanese'],
-      "お好み焼き":       ['hot', 'meat', 'vegetarian'],
-      "たこ焼き":         ['hot', 'fish'],
-      "餃子":             ['hot', 'meat'],
-      "麻婆豆腐":         ['hot', 'meat', 'spicy'],
-      "チャーハン":       ['hot', 'rice', 'meat'],
-      "ビーフシチュー":   ['hot', 'meat', 'soup'],
-      "ミートソースパスタ": ['hot', 'meat', 'noodle'],
-      "カルボナーラ":     ['hot', 'meat', 'noodle'],
-      "ピザ":             ['hot', 'meat', 'vegetarian'],
-      "グラタン":         ['hot', 'meat', 'vegetarian'],
-      "ドリア":           ['hot', 'rice', 'meat'],
-      "シーザーサラダ":   ['vegetarian'],
-      "冷やし中華":       ['noodle', 'vegetarian'],
-      "サンドイッチ":     ['meat', 'vegetarian'],
-      "オムライス":       ['hot', 'rice', 'meat'],
-      "生姜焼き":         ['hot', 'meat', 'japanese'],
-      "唐揚げ":           ['hot', 'meat', 'deepfried', 'japanese'],
-      "酢豚":             ['hot', 'meat'],
-      "回鍋肉":           ['hot', 'meat', 'spicy'],
-      "天津飯":           ['hot', 'rice', 'meat'],
-      "フォー":           ['hot', 'noodle'],
-      "ナシゴレン":       ['hot', 'rice', 'spicy'],
-      "バターチキンカレー": ['hot', 'rice', 'meat', 'spicy'],
-      "グリーンカレー":   ['hot', 'rice', 'spicy'],
-      "カオマンガイ":     ['hot', 'rice', 'meat'],
-      "ビビンバ":         ['hot', 'rice', 'meat', 'spicy'],
-      "トッポギ":         ['hot', 'spicy', 'vegetarian'],
-      "サムギョプサル":   ['hot', 'meat'],
-      "ガパオライス":     ['hot', 'rice', 'meat', 'spicy'],
-      "ローストビーフ":   ['meat'],
-      "エビフライ":       ['hot', 'deepfried', 'fish'],
-      "ホットドッグ":     ['hot', 'meat'],
-      "ハヤシライス":     ['hot', 'rice', 'meat'],
-      "スンドゥブ":       ['hot', 'spicy', 'soup'],
-      "もつ鍋":           ['hot', 'meat', 'soup'],
-      "鍋焼きうどん":     ['hot', 'noodle', 'soup'],
-      "かつ丼":           ['hot', 'rice', 'meat', 'deepfried'],
-      "牛丼":             ['hot', 'rice', 'meat'],
-      "天丼":             ['hot', 'rice', 'deepfried'],
-      "焼きそば":         ['hot', 'noodle', 'meat'],
-      "煮物":             ['hot', 'vegetarian']
-    };
-
-    let questionIndex = 0;
-    let answers = {};
-
-    function showQuestion() {
-      if (questionIndex >= traits.length) {
-        filterRecipes();
-        return;
-      }
-      const trait = traits[questionIndex];
-      document.getElementById("question").textContent = trait.question;
-    }
-
-    function answer(ans) {
-      const trait = traits[questionIndex];
-      answers[trait.key] = (ans === 'yes');
-      questionIndex++;
-      showQuestion();
-    }
-
-    function filterRecipes() {
-      const remaining = Object.keys(recipeTraits).filter(recipe => {
-        const recipeKeys = recipeTraits[recipe];
-        return Object.keys(answers).every(key =>
-          answers[key] === recipeKeys.includes(key)
-        );
-      });
-
-      document.getElementById("question").classList.add("hidden");
-      document.querySelector("button").style.display = "none";
-      document.querySelectorAll("button")[1].style.display = "none";
-
-      const resultBox = document.getElementById("result");
-      resultBox.classList.remove("hidden");
-
-      if (remaining.length === 1) {
-        resultBox.innerHTML = `<strong>あなたにおすすめの料理は：</strong><h2>${remaining[0]}</h2>`;
-      } else if (remaining.length > 1) {
-        resultBox.innerHTML = `<p>いくつか該当しました：</p><ul>` + remaining.map(r => `<li>${r}</li>`).join('') + '</ul>';
-      } else {
-        resultBox.textContent = "一致する料理が見つかりませんでした。";
-      }
-    }
-
-    showQuestion();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
