@@ -3,25 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>料理アキネーター 🍳</title>
+  <title>🍽️ 料理アキネーター Deluxe</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🍽️ 料理アキネーター</h1>
-    <p id="question">質問を読み込み中...</p>
-
-    <div id="buttons">
-      <button id="yesBtn" onclick="handleAnswer(true)">はい</button>
-      <button id="noBtn" onclick="handleAnswer(false)">いいえ</button>
-    </div>
-
-    <div id="result" style="display:none;"></div>
-
-    <div id="resetArea" style="display:none;">
-      <button id="resetBtn" onclick="resetQuiz()">もう一度遊ぶ</button>
-    </div>
+  <!-- タイトル演出 -->
+  <div id="intro-screen">
+    <h1>🍴 料理アキネーター Deluxe 🍱</h1>
+    <p>あなたの気分にぴったりの料理を見つけましょう！</p>
+    <button id="start-btn">はじめる ▶</button>
   </div>
+
+  <main id="main-content" style="display:none;">
+    <h1>🍳 料理アキネーター</h1>
+    <div id="question-container" class="card" role="region" aria-live="polite">
+      <p id="question">質問を読み込み中...</p>
+      <div id="buttons">
+        <button id="yes" class="btn-yes" aria-label="はいを選択">はい 👍</button>
+        <button id="no" class="btn-no" aria-label="いいえを選択">いいえ 👎</button>
+      </div>
+    </div>
+    <div id="result" class="card" style="display:none;" aria-live="polite"></div>
+    <button id="restart" class="restart" style="display:none;">🔁 もう一度プレイ</button>
+  </main>
+
+  <footer>
+    <p>© 2025 料理アキネーター Deluxe</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
